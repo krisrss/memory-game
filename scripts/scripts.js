@@ -15,8 +15,10 @@ const GameCard = {
 
 let GameBoard = {
 
-     maxCards : 16,
-     clickedCards : [],
+    maxCards : 16,
+    clickedCards : [],
+    gameActive : false,
+    triesLeft : 0,
 
      applyCards : function(){
         for(let i = 0; i < this.maxCards; i++){
@@ -32,6 +34,11 @@ let GameBoard = {
 
 //Initialize game elements
 GameBoard.applyCards();
+GameBoard.gameActive = true;
+GameBoard.triesLeft = 3;
+$('#tries').text(GameBoard.triesLeft);
+
+
 
 function unflipSelected(cardSize,card){
     $(card).animate({
@@ -55,6 +62,19 @@ function unflipSelected(cardSize,card){
 function validateUserChoice(cardSize){
     if(!$(GameBoard.clickedCards[0]).is(":animated") && !$(GameBoard.clickedCards[1]).is(":animated")){
         if(GameBoard.clickedCards.length === 2){
+
+
+            GameBoard.triesLeft--;
+
+            if(GameBoard.gameActive){
+                $('#tries').text(GameBoard.triesLeft);
+            }
+
+
+            if(GameBoard.triesLeft === 0){
+                GameBoard.gameActive = false;
+                alert("You lost (no tries remaining)");
+            }
 
             if($(GameBoard.clickedCards[0]).attr("src") !== $(GameBoard.clickedCards[1]).attr("src")){
                 unflipSelected(cardSize,GameBoard.clickedCards[0]);
@@ -116,8 +136,10 @@ function cardFlip(card,frontImg){
 
 
 $(".game-card").on("click",function(){
-	let faceImage = GameCard.faceImages[$('.game-card').index(this)];
-    if(GameBoard.clickedCards.length !== 2){
-        cardFlip(this,faceImage);
-    };
-}); 
+    if(GameBoard.gameActive === true){
+        let faceImage = GameCard.faceImages[$('.game-card').index(this)];
+        if(GameBoard.clickedCards.length !== 2){
+            cardFlip(this,faceImage);
+        }
+    }
+});
