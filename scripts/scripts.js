@@ -55,20 +55,32 @@ function validateUserChoice(cardSize){
     if(!$(GameBoard.clickedCards[0]).is(":animated") && !$(GameBoard.clickedCards[1]).is(":animated")){
         if(GameBoard.clickedCards.length === 2){
 
-
             if($(GameBoard.clickedCards[0]).attr("src") !== $(GameBoard.clickedCards[1]).attr("src")){
                 unflipSelected(cardSize,GameBoard.clickedCards[0]);
                 unflipSelected(cardSize,GameBoard.clickedCards[1]);
             }
-
             else if($(GameBoard.clickedCards[0]).attr("src") === $(GameBoard.clickedCards[1]).attr("src")) {
                 $(GameBoard.clickedCards[0]).fadeTo('medium', 0).addClass("hidden");
                 $(GameBoard.clickedCards[1]).fadeTo('medium', 0).addClass("hidden");
-            };
 
 
-            GameBoard.clickedCards = [];
+                if($(GameBoard.clickedCards[0], GameBoard.clickedCards[1]).css("opacity","0")){
+                    GameBoard.clickedCards = [];
+                    checkIfWon();
+                }
+            }
         }
+    }
+};
+
+
+function checkIfWon(){
+    if($(".hidden").length == GameBoard.maxCards){
+        setTimeout(function() 
+        {
+            alert("You won")
+
+        },500);
     }
 };
 
@@ -77,8 +89,8 @@ function validateUserChoice(cardSize){
 
 function cardFlip(card,frontImg){
     const cardSize = 120;
-    GameBoard.clickedCards.push(card);
-
+    if($(card).attr("src") != frontImg && !$(card).is(":animated")){
+            GameBoard.clickedCards.push(card);
 
     $(card).animate({
         width : 0,
@@ -98,12 +110,12 @@ function cardFlip(card,frontImg){
             })
         }
     })
+}
 };
 
 
 $(".game-card").on("click",function(){
 	let faceImage = GameCard.faceImages[$('.game-card').index(this)];
-
     if(GameBoard.clickedCards.length !== 2){
         cardFlip(this,faceImage);
     };
