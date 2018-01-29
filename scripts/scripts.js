@@ -19,6 +19,7 @@ let GameBoard = {
     clickedCards : [],
     gameActive : false,
     triesLeft : 0,
+    timeLeft : "0:00",
 
      applyCards : function(){
         for(let i = 0; i < this.maxCards; i++){
@@ -30,17 +31,57 @@ let GameBoard = {
 };
 
 
+let CountDownTimer = {
+    timer: null,
+
+    start : function(){
+        timer = setInterval(this.tick,1000);
+    },
+
+    cancel : function(){
+        clearInterval(timer);
+    },
+
+    tick : function(){
+        if(GameBoard.gameActive != false){
+            let splitTime = GameBoard.timeLeft.split(":");
+            let minutes = parseInt(splitTime[0],10);
+            let seconds = parseInt(splitTime[1],10);
+            seconds -= 1;
+            minutes = (seconds < 0) ? minutes-=1 : minutes;
+            seconds = (seconds < 0) ? "59" : seconds;
+            seconds = (seconds < 10) ? "0" + seconds : seconds;
+        
+            if((minutes <= 0 && seconds <= 0)){
+                clearInterval(this.timer);
+                GameBoard.gameActive = false;
+                alert("Time's up");
+            }
+            GameBoard.timeLeft = minutes + ":"+ seconds;
+            
+            $("#time").html(GameBoard.timeLeft)
+        }
+    
+    }
+};
+
+
 
 
 //Initialize game elements
 GameBoard.applyCards();
 GameBoard.gameActive = true;
 GameBoard.triesLeft = 3;
+GameBoard.timeLeft = "0:15";
+$("#time").html(GameBoard.timeLeft)
+
 $('#tries').text(GameBoard.triesLeft);
+CountDownTimer.start();
 
 
 
-function unflipSelected(cardSize,card){
+
+function unflipCard(cardSize,card){
     $(card).animate({
         width : 0,
         marginLeft : cardSize / 2,
@@ -77,8 +118,8 @@ function validateUserChoice(cardSize){
             }
 
             if($(GameBoard.clickedCards[0]).attr("src") !== $(GameBoard.clickedCards[1]).attr("src")){
-                unflipSelected(cardSize,GameBoard.clickedCards[0]);
-                unflipSelected(cardSize,GameBoard.clickedCards[1]);
+                unflipCard(cardSize,GameBoard.clickedCards[0]);
+                unflipCard(cardSize,GameBoard.clickedCards[1]);
             }
             else if($(GameBoard.clickedCards[0]).attr("src") === $(GameBoard.clickedCards[1]).attr("src")) {
                 $(GameBoard.clickedCards[0]).fadeTo('medium', 0).addClass("hidden");
