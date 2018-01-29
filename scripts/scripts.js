@@ -1,40 +1,36 @@
-const maxCards = 8;
+const GameCard = {
+    faceImages : ["images/1.png","images/2.png","images/3.png","images/4.png","images/1.png","images/2.png","images/3.png","images/4.png"],
+    
+    backImage : "images/cardBack.png",
 
-const faceImages = ["images/1.png","images/2.png","images/3.png","images/4.png",
-					"images/1.png","images/2.png","images/3.png","images/4.png"];
-let clickedCards = [];
-
-
-const cardContainer = $("<div/>", {
-	"class" : "card-container"
-});
-
-
-const cardImage = $("<img/>", {
-    "class" : "game-card"
-});
-
-
-
-for(let i = 0; i < maxCards; i++){
-	let card = cardImage.clone().attr("src","images/cardBack.png");
-	let cardWithContainer = cardContainer.clone().append(card);
-	$("#card-list").append(cardWithContainer);
+    cardContainer : $("<div/>", {
+        "class" : "card-container"
+    }),
+    
+    cardImage : $("<img/>", {
+        "class" : "game-card"
+    })
 };
 
+let GameBoard = {
 
+     maxCards : 8,
+     clickedCards : [],
 
-function validateUserChoice(cardSize){
-    if(clickedCards.length === 2){
-        if(!$(clickedCards[0]).is(":animated") && !$(clickedCards[1]).is(":animated")){
-            unflipSelected(cardSize,clickedCards[0]);
-            unflipSelected(cardSize,clickedCards[1]);
-
-            clickedCards = [];
-        }
+     applyCards : function(){
+        for(let i = 0; i < this.maxCards; i++){
+            let card = GameCard.cardImage.clone().attr("src",GameCard.backImage);
+            let cardWithContainer = GameCard.cardContainer.clone().append(card);
+            $("#card-list").append(cardWithContainer);
+        };
     }
 };
 
+
+
+
+//Initialize game elements
+GameBoard.applyCards();
 
 function unflipSelected(cardSize,card){
     $(card).animate({
@@ -43,19 +39,45 @@ function unflipSelected(cardSize,card){
         marginRight : cardSize / 2
     },{
         complete : function(){
-            this.src = "images/cardBack.png";
+            $(card).attr("src", GameCard.backImage);
             $(card).animate({
                 width : cardSize,
                 marginLeft : 0,
                 marginRight : 0,
             })
+            GameBoard.clickedCards = [];
         }
     })
 };
 
+
+function validateUserChoice(cardSize){
+    if(!$(GameBoard.clickedCards[0]).is(":animated") && !$(GameBoard.clickedCards[1]).is(":animated")){
+        if(GameBoard.clickedCards.length === 2){
+
+
+            if($(GameBoard.clickedCards[0]).attr("src") !== $(GameBoard.clickedCards[1]).attr("src")){
+                unflipSelected(cardSize,GameBoard.clickedCards[0]);
+                unflipSelected(cardSize,GameBoard.clickedCards[1]);
+            }
+
+            else if($(GameBoard.clickedCards[0]).attr("src") === $(GameBoard.clickedCards[1]).attr("src")) {
+                $(GameBoard.clickedCards[0]).fadeTo('medium', 0).addClass("hidden");
+                $(GameBoard.clickedCards[1]).fadeTo('medium', 0).addClass("hidden");
+            };
+
+
+            GameBoard.clickedCards = [];
+        }
+    }
+};
+
+
+
+
 function cardFlip(card,frontImg){
     const cardSize = 120;
-    clickedCards.push(card);
+    GameBoard.clickedCards.push(card);
 
 
     $(card).animate({
@@ -80,9 +102,9 @@ function cardFlip(card,frontImg){
 
 
 $(".game-card").on("click",function(){
-	let faceImage = faceImages[$('.game-card').index(this)];
+	let faceImage = GameCard.faceImages[$('.game-card').index(this)];
 
-    if(clickedCards.length !== 2){
+    if(GameBoard.clickedCards.length !== 2){
         cardFlip(this,faceImage);
     };
 }); 
