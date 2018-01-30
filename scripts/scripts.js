@@ -1,7 +1,6 @@
 const GameCard = {
     faceImages : ["images/1.png","images/2.png","images/3.png","images/4.png","images/5.png","images/6.png","images/7.png","images/8.png",
                   "images/1.png","images/2.png","images/3.png","images/4.png","images/5.png","images/6.png","images/7.png","images/8.png"],
-    
     backImage : "images/cardBack.png",
 
     cardContainer : $("<div/>", {
@@ -21,7 +20,7 @@ let GameBoard = {
     triesLeft : 0,
     timeLeft : "0:00",
 
-     applyCards : function(){
+    applyCards : function(){
         for(let i = 0; i < this.maxCards; i++){
             let card = GameCard.cardImage.clone().attr("src",GameCard.backImage);
             let cardWithContainer = GameCard.cardContainer.clone().append(card);
@@ -65,21 +64,15 @@ let CountDownTimer = {
     }
 };
 
-
-
-
 //Initialize game elements
 GameBoard.applyCards();
-GameBoard.gameActive = true;
-GameBoard.triesLeft = 3;
-GameBoard.timeLeft = "0:15";
-$("#time").html(GameBoard.timeLeft)
-
-$('#tries').text(GameBoard.triesLeft);
-CountDownTimer.start();
+resetStatusValues();
 
 
-
+function resetStatusValues(){
+    $('#tries').text("?");
+    $("#time").html("?")
+}
 
 function unflipCard(cardSize,card){
     $(card).animate({
@@ -103,7 +96,6 @@ function unflipCard(cardSize,card){
 function validateUserChoice(cardSize){
     if(!$(GameBoard.clickedCards[0]).is(":animated") && !$(GameBoard.clickedCards[1]).is(":animated")){
         if(GameBoard.clickedCards.length === 2){
-
 
             GameBoard.triesLeft--;
 
@@ -152,7 +144,7 @@ function checkIfWon(){
 function cardFlip(card,frontImg){
     const cardSize = 120;
     if($(card).attr("src") != frontImg && !$(card).is(":animated")){
-            GameBoard.clickedCards.push(card);
+        GameBoard.clickedCards.push(card);
 
     $(card).animate({
         width : 0,
@@ -184,3 +176,36 @@ $(".game-card").on("click",function(){
         }
     }
 });
+
+
+function setDifficulty(tries,time){
+    GameBoard.triesLeft = tries;
+    GameBoard.timeLeft = time;
+};
+
+function activateGame(){
+    GameBoard.gameActive = true;
+    $("#main-menu").css("display","none");
+    $('#tries').text(GameBoard.triesLeft);
+    $("#time").html(GameBoard.timeLeft)
+}
+
+
+$("#btn-easy").on("click",function(){
+    setDifficulty(40,"1:40")
+    activateGame();
+    CountDownTimer.start();
+})
+
+
+$("#btn-medium").on("click",function(){
+    setDifficulty(30,"1:00")
+    activateGame();
+    CountDownTimer.start();
+})
+
+$("#btn-hard").on("click",function(){
+    setDifficulty(16,"0:40")
+    activateGame();
+    CountDownTimer.start();
+})

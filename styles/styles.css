@@ -72,3 +72,50 @@ body{
     background-color: rgb(250,166,26);
     color: white;
 }
+
+
+#main-menu{
+    position: absolute;
+    height: 690px;
+    width: 660px;
+    z-index: 1;
+    background-color: rgba(0,0,0,0.5);
+}
+
+#menu-content{
+    border: 1px solid black;
+    box-shadow: 1px 1px 5px #555 inset;
+    background-color: rgb(255, 204, 51);
+    width: 490px;
+    margin: 67px auto;
+    border-radius: 40px;
+    
+}
+
+h1{
+    font-size: 55px;
+    color:  rgb(255,102,0);
+    text-shadow: 5px 0 0 #fff, -5px 0 0 #fff, 0 5px 0 #fff, 0 -5px 0 #fff, 1px 1px #fff, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff;
+    margin-top: 15px;
+}
+
+h2{
+    color: rgb(255,102,0);
+    text-shadow: 2px 0 0 #fff, -2px 0 0 #fff, 0 2px 0 #fff, 0 -2px 0 #fff, 1px 1px #fff, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff;
+    
+}
+
+.game-btn{
+    text-decoration: none;
+    color: rgb(255,102,0);
+    border: 3px solid black;
+    padding: 10px;
+    font-size: 25px;
+    display: block;
+    margin-bottom: 30px;
+    width: 200px;
+    margin: 30px auto;
+    text-shadow: 2px 0 0 #fff, -2px 0 0 #fff, 0 2px 0 #fff, 0 -2px 0 #fff, 1px 1px #fff, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff;
+    background-color:   rgb(250,166,26);
+    border-radius: 15px;   
+}
