@@ -1,6 +1,5 @@
 const GameCard = {
-    faceImages : ["images/1.png","images/2.png","images/3.png","images/4.png","images/5.png","images/6.png","images/7.png","images/8.png",
-                  "images/1.png","images/2.png","images/3.png","images/4.png","images/5.png","images/6.png","images/7.png","images/8.png"],
+    faceImages : ["images/1.png","images/2.png","images/3.png","images/4.png","images/5.png","images/6.png","images/7.png","images/8.png"],
     backImage : "images/cardBack.png",
 
     cardContainer : $("<div/>", {
@@ -67,7 +66,34 @@ let CountDownTimer = {
     }
 };
 
+
+function shuffleCards(colorList){
+    const array = [];
+    for (let i = 0; i <= colorList.length -1; i++){
+        let randomColor = Math.floor(Math.random() * colorList.length);
+        array[i] = colorList[randomColor];   
+        
+            for (let x = 0; x <= i-1; x++){
+                if(array[x] === array[i]){
+                    i--;
+                }
+        }            
+
+    }
+    return array;
+};
+
+
+function createRandomCardList(){
+    var randomList = shuffleCards(GameCard.faceImages)
+    .concat(shuffleCards(GameCard.faceImages));
+    return randomList;
+};
+
+
+
 //Initialize game elements
+let createColorList = createRandomCardList();
 GameBoard.applyCards();
 $("#close-game").css("display","none");
 $("#replay-menu").css("display","none");
@@ -184,7 +210,7 @@ function cardFlip(card,frontImg){
 
 $(".game-card").on("click",function(){
     if(GameBoard.gameActive === true){
-        let faceImage = GameCard.faceImages[$('.game-card').index(this)];
+        let faceImage = createColorList[$('.game-card').index(this)];
         if(GameBoard.clickedCards.length !== 2){
             cardFlip(this,faceImage);
         }
@@ -219,7 +245,8 @@ function stopGame(){
 
 
 $("#btn-easy").on("click",function(){
-    setDifficulty(40,"0:03")
+    createColorList = createRandomCardList();
+    setDifficulty(40,"1:40")
     unflipAllCards();
     activateGame();
     CountDownTimer.start();
@@ -227,6 +254,7 @@ $("#btn-easy").on("click",function(){
 
 
 $("#btn-medium").on("click",function(){
+    createColorList = createRandomCardList();
     setDifficulty(30,"1:00");
     unflipAllCards();
     activateGame();
@@ -234,6 +262,7 @@ $("#btn-medium").on("click",function(){
 });
 
 $("#btn-hard").on("click",function(){
+    createColorList = createRandomCardList();
     setDifficulty(16,"0:40")
     unflipAllCards();
     activateGame();
