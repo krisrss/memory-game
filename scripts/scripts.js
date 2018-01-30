@@ -69,6 +69,7 @@ let CountDownTimer = {
 
 //Initialize game elements
 GameBoard.applyCards();
+$("#close-game").css("display","none");
 $("#replay-menu").css("display","none");
 resetStatusValues();
 
@@ -203,7 +204,7 @@ function setDifficulty(tries,time){
 function activateGame(){
     GameBoard.gameActive = true;
     $("#main-menu").css("display","none");
-
+    $("#close-game").css("display","block");
     $('#tries').text(GameBoard.triesLeft);
     $("#time").html(GameBoard.timeLeft)
 };
@@ -218,7 +219,7 @@ function stopGame(){
 
 
 $("#btn-easy").on("click",function(){
-    setDifficulty(40,"1:40")
+    setDifficulty(40,"0:03")
     unflipAllCards();
     activateGame();
     CountDownTimer.start();
@@ -245,4 +246,10 @@ $("#btn-replay").on("click",function(){
     unflipAllCards();
     CountDownTimer.cancel();
 
+});
+
+$("#close-game").on("click",function(){
+    stopGame();
+    unflipAllCards();
+    CountDownTimer.cancel();
 });
