@@ -105,12 +105,17 @@ function resetStatusValues(){
     $("#time").html("?")
 };
 
+
+//Unflip card after small delay
 function unflipCard(cardSize,card){
-    $(card).animate({
+    setTimeout(function()
+    {
+        $(card).animate({
         width : 0,
         marginLeft : cardSize / 2,
         marginRight : cardSize / 2
     },{
+
         complete : function(){
             $(card).attr("src", GameCard.backImage);
             $(card).animate({
@@ -121,6 +126,7 @@ function unflipCard(cardSize,card){
             GameBoard.clickedCards = [];
         }
     })
+    },220);
 };
 
 
@@ -134,7 +140,6 @@ function validateUserChoice(cardSize){
                 $('#tries').text(GameBoard.triesLeft);
             }
 
-
             if(GameBoard.triesLeft === 0){
                 GameBoard.gameActive = false;
                 $("#close-game").css("display","none");
@@ -145,6 +150,7 @@ function validateUserChoice(cardSize){
             if($(GameBoard.clickedCards[0]).attr("src") !== $(GameBoard.clickedCards[1]).attr("src")){
                 unflipCard(cardSize,GameBoard.clickedCards[0]);
                 unflipCard(cardSize,GameBoard.clickedCards[1]);
+
             }
             else if($(GameBoard.clickedCards[0]).attr("src") === $(GameBoard.clickedCards[1]).attr("src")) {
                 $(GameBoard.clickedCards[0]).fadeTo('medium', 0).addClass("hidden");
@@ -188,6 +194,7 @@ function cardFlip(card,frontImg){
         marginRight : cardSize / 2
     },{
         complete : function(){
+
             if(GameBoard.gameActive){
                 $(card).attr("src", frontImg);
                 
