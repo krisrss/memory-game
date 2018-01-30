@@ -54,7 +54,10 @@ let CountDownTimer = {
             if((minutes <= 0 && seconds <= 0)){
                 clearInterval(this.timer);
                 GameBoard.gameActive = false;
-                alert("Time's up");
+
+                $("#close-game").css("display","none");
+                $("#replay-menu").css("display","block");
+                $("#replay-menu").children().children("h1").text("Time's Up");
             }
             GameBoard.timeLeft = minutes + ":"+ seconds;
             
@@ -66,13 +69,14 @@ let CountDownTimer = {
 
 //Initialize game elements
 GameBoard.applyCards();
+$("#replay-menu").css("display","none");
 resetStatusValues();
 
 
 function resetStatusValues(){
     $('#tries').text("?");
     $("#time").html("?")
-}
+};
 
 function unflipCard(cardSize,card){
     $(card).animate({
@@ -106,7 +110,9 @@ function validateUserChoice(cardSize){
 
             if(GameBoard.triesLeft === 0){
                 GameBoard.gameActive = false;
-                alert("You lost (no tries remaining)");
+                $("#close-game").css("display","none");
+                $("#replay-menu").css("display","block");
+                $("#replay-menu").children().children("h1").text("Game Over");
             }
 
             if($(GameBoard.clickedCards[0]).attr("src") !== $(GameBoard.clickedCards[1]).attr("src")){
@@ -132,7 +138,10 @@ function checkIfWon(){
     if($(".hidden").length == GameBoard.maxCards){
         setTimeout(function() 
         {
-            alert("You won")
+            GameBoard.gameActive = false;
+            $("#close-game").css("display","none");
+            $("#replay-menu").css("display","block");
+            $("#replay-menu").children().children("h1").text("You Won!");
 
         },500);
     }
@@ -152,7 +161,11 @@ function cardFlip(card,frontImg){
         marginRight : cardSize / 2
     },{
         complete : function(){
-            $(card).attr("src", frontImg);
+            if(GameBoard.gameActive){
+                $(card).attr("src", frontImg);
+                
+            }
+
             $(card).animate({
                 width : cardSize,
                 marginLeft : 0,
@@ -177,6 +190,10 @@ $(".game-card").on("click",function(){
     }
 });
 
+function unflipAllCards(){
+    $(".game-card").attr("src",GameCard.backImage).css("opacity","").removeClass("hidden");
+};
+
 
 function setDifficulty(tries,time){
     GameBoard.triesLeft = tries;
@@ -186,26 +203,46 @@ function setDifficulty(tries,time){
 function activateGame(){
     GameBoard.gameActive = true;
     $("#main-menu").css("display","none");
+
     $('#tries').text(GameBoard.triesLeft);
     $("#time").html(GameBoard.timeLeft)
-}
+};
+
+function stopGame(){
+    GameBoard.gameActive = false; 
+    GameBoard.clickedCards = [];
+    $("#main-menu").css("display","block");
+    $("#close-game").css("display","none");
+    resetStatusValues();
+};
 
 
 $("#btn-easy").on("click",function(){
     setDifficulty(40,"1:40")
+    unflipAllCards();
     activateGame();
     CountDownTimer.start();
-})
+});
 
 
 $("#btn-medium").on("click",function(){
-    setDifficulty(30,"1:00")
+    setDifficulty(30,"1:00");
+    unflipAllCards();
     activateGame();
     CountDownTimer.start();
-})
+});
 
 $("#btn-hard").on("click",function(){
     setDifficulty(16,"0:40")
+    unflipAllCards();
     activateGame();
     CountDownTimer.start();
-})
+});
+
+$("#btn-replay").on("click",function(){
+    $("#replay-menu").css("display","none");
+    stopGame();
+    unflipAllCards();
+    CountDownTimer.cancel();
+
+});

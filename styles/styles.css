@@ -119,3 +119,22 @@ h2{
     background-color:   rgb(250,166,26);
     border-radius: 15px;   
 }
+
+
+#replay-menu{
+    position: absolute;
+    height: 690px;
+    width: 660px;
+    z-index: 1;
+    background-color: rgba(0,0,0,0.5);
+}  
+
+
+#replay-content{
+    width: 490px;
+    height: 200px;
+    margin: 200px auto;
+    border: 1px solid black;    
+    background-color: rgb(255, 204, 51);
+    border-radius: 40px;  
+}
